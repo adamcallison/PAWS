@@ -26,7 +26,7 @@ C="""
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 import wx
-import TerminalFrame
+from . import TerminalFrame
 
 modules ={u'TerminalFrame': [1, 'Main frame of Application', u'TerminalFrame.py']}
 

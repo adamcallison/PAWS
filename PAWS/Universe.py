@@ -109,7 +109,7 @@ C="""
   copies of the same thing, and we also save on typing!
 """
 
-from Core import *
+from .Core import *
 
 #********************************************************************************
 #                        U N I V E R S E   F U N C T I O N S
@@ -1302,7 +1302,8 @@ class ServiceDictDescription:
         this *seriously* reduces memory requirements!
         """
 
-        self.Descriptions[Key + u"Desc"] = string.join(string.split(Value))
+        self.Descriptions[Key + u"Desc"] = ' '.join(Value.split())
+        #self.Descriptions[Key + u"Desc"] = string.join(string.split(Value))
 
     def SkyDesc(self):
         """

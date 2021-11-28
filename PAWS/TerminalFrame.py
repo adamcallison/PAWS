@@ -39,8 +39,8 @@ import wx
 from wx.lib.anchors import LayoutAnchors
 from wx.lib.wordwrap import wordwrap
 
-from Core import *
-from Universe import *
+from .Core import *
+from .Universe import *
 
 def create(parent):
     return TFrame(parent)
@@ -63,8 +63,11 @@ class TFrame(wx.Frame):
     def _init_coll_flexGridSizer1_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.TDisplay, 0, border=0, flag=wx.GROW | wx.EXPAND)
-        parent.AddWindow(self.TInput, 1, border=1,
+        #parent.AddWindow(self.TDisplay, 0, border=0, flag=wx.GROW | wx.EXPAND)
+        parent.Add(self.TDisplay, 0, border=0, flag=wx.GROW | wx.EXPAND)
+        #parent.AddWindow(self.TInput, 1, border=1,
+        #      flag=wx.GROW | wx.RIGHT | wx.LEFT | wx.EXPAND | wx.ALIGN_BOTTOM)
+        parent.Add(self.TInput, 1, border=1,
               flag=wx.GROW | wx.RIGHT | wx.LEFT | wx.EXPAND | wx.ALIGN_BOTTOM)
 
     def _init_coll_flexGridSizer1_Growables(self, parent):
@@ -83,26 +86,42 @@ class TFrame(wx.Frame):
     def _init_coll_menuFile_Items(self, parent):
         # generated method, don't edit
 
-        parent.Append(help='', id=wxID_TFRAMEMENUFILEPLAYGAME,
-              kind=wx.ITEM_NORMAL, text=u'Pick Game …')
+        #parent.Append(help='', id=wxID_TFRAMEMENUFILEPLAYGAME,
+        #      kind=wx.ITEM_NORMAL, text=u'Pick Game …')
+        parent.Append(id=wxID_TFRAMEMENUFILEPLAYGAME, item=u'Pick Game …',
+              helpString='', kind=wx.ITEM_NORMAL)
         parent.AppendSeparator()
-        parent.Append(help='', id=wxID_TFRAMEMENUFILESAVE, kind=wx.ITEM_NORMAL,
-              text=u'Save')
-        parent.Append(help='', id=wxID_TFRAMEMENUFILEITEMS2,
-              kind=wx.ITEM_NORMAL, text=u'Restore')
+        #parent.Append(help='', id=wxID_TFRAMEMENUFILESAVE, kind=wx.ITEM_NORMAL,
+        #      text=u'Save')
+        parent.Append(id=wxID_TFRAMEMENUFILESAVE, item=u'Save',
+              helpString='', kind=wx.ITEM_NORMAL)
+        #parent.Append(help='', id=wxID_TFRAMEMENUFILEITEMS2,
+        #      kind=wx.ITEM_NORMAL, text=u'Restore')
+        parent.Append(id=wxID_TFRAMEMENUFILEITEMS2, item=u'Restore',
+              helpString='', kind=wx.ITEM_NORMAL)
         parent.AppendSeparator()
-        parent.Append(help='', id=wxID_TFRAMEMENUFILEDEBUG, kind=wx.ITEM_NORMAL,
-              text=u'Debug')
-        parent.Append(help='', id=wxID_TFRAMEMENUFILELOGGAME,
-              kind=wx.ITEM_NORMAL, text=u'Log Game')
+        #parent.Append(help='', id=wxID_TFRAMEMENUFILEDEBUG, kind=wx.ITEM_NORMAL,
+        #      text=u'Debug')
+        parent.Append(id=wxID_TFRAMEMENUFILEDEBUG, item=u'Debug',
+              helpString='', kind=wx.ITEM_NORMAL)
+        #parent.Append(help='', id=wxID_TFRAMEMENUFILELOGGAME,
+        #      kind=wx.ITEM_NORMAL, text=u'Log Game')
+        parent.Append(id=wxID_TFRAMEMENUFILELOGGAME, item=u'Log Game',
+              helpString='', kind=wx.ITEM_NORMAL)
         parent.AppendSeparator()
-        parent.Append(help='', id=wxID_TFRAMEMENUFILEVERBOSE,
-              kind=wx.ITEM_NORMAL, text=u'Verbose')
-        parent.Append(help='', id=wxID_TFRAMEMENUFILETERSE, kind=wx.ITEM_NORMAL,
-              text=u'Terse')
+        #parent.Append(help='', id=wxID_TFRAMEMENUFILEVERBOSE,
+        #      kind=wx.ITEM_NORMAL, text=u'Verbose')
+        parent.Append(id=wxID_TFRAMEMENUFILEVERBOSE, item=u'Verbose',
+              helpString='', kind=wx.ITEM_NORMAL)
+        #parent.Append(help='', id=wxID_TFRAMEMENUFILETERSE, kind=wx.ITEM_NORMAL,
+        #      text=u'Terse')
+        parent.Append(id=wxID_TFRAMEMENUFILETERSE, item=u'Terse',
+              helpString='', kind=wx.ITEM_NORMAL)
         parent.AppendSeparator()
-        parent.Append(help='', id=wxID_TFRAMEMENUFILEEXIT, kind=wx.ITEM_NORMAL,
-              text=u'E&xit')
+        #parent.Append(help='', id=wxID_TFRAMEMENUFILEEXIT, kind=wx.ITEM_NORMAL,
+        #      text=u'E&xit')
+        parent.Append(id=wxID_TFRAMEMENUFILEEXIT, item=u'E&xit',
+              helpString='', kind=wx.ITEM_NORMAL)
         self.Bind(wx.EVT_MENU, self.OnMenuFileSaveMenu,
               id=wxID_TFRAMEMENUFILESAVE)
         self.Bind(wx.EVT_MENU, self.OnMenuFileItems2Menu,
@@ -123,18 +142,24 @@ class TFrame(wx.Frame):
     def _init_coll_menuView_Items(self, parent):
         # generated method, don't edit
 
-        parent.Append(help='', id=wxID_TFRAMEMENUVIEWFONT, kind=wx.ITEM_NORMAL,
-              text=u'Font …')
+        #parent.Append(help='', id=wxID_TFRAMEMENUVIEWFONT, kind=wx.ITEM_NORMAL,
+        #      text=u'Font …')
+        parent.Append(id=wxID_TFRAMEMENUVIEWFONT, item=u'Font …',
+              helpString='', kind=wx.ITEM_NORMAL)
         self.Bind(wx.EVT_MENU, self.OnMenuViewFontMenu,
               id=wxID_TFRAMEMENUVIEWFONT)
 
     def _init_coll_menuHelp_Items(self, parent):
         # generated method, don't edit
 
-        parent.Append(help='', id=wxID_TFRAMEMENUHELPHINTS, kind=wx.ITEM_NORMAL,
-              text=u'Hints')
-        parent.Append(help='', id=wxID_TFRAMEMENUHELPABOUT, kind=wx.ITEM_NORMAL,
-              text=u'About PAWS')
+        #parent.Append(help='', id=wxID_TFRAMEMENUHELPHINTS, kind=wx.ITEM_NORMAL,
+        #      text=u'Hints')
+        parent.Append(id=wxID_TFRAMEMENUHELPHINTS, item=u'Hints',
+              helpString='', kind=wx.ITEM_NORMAL)
+        #parent.Append(help='', id=wxID_TFRAMEMENUHELPABOUT, kind=wx.ITEM_NORMAL,
+        #      text=u'About PAWS')
+        parent.Append(id=wxID_TFRAMEMENUHELPABOUT, item=u'About PAWS',
+              helpString='', kind=wx.ITEM_NORMAL)
         self.Bind(wx.EVT_MENU, self.OnMenuHelpHintsMenu,
               id=wxID_TFRAMEMENUHELPHINTS)
         self.Bind(wx.EVT_MENU, self.OnMenuHelpAboutMenu,
@@ -144,7 +169,8 @@ class TFrame(wx.Frame):
         # generated method, don't edit
         parent.SetFieldsCount(1)
 
-        parent.SetStatusText(number=0, text=u'Status Bar Info Goes Here')
+        #parent.SetStatusText(number=0, text=u'Status Bar Info Goes Here')
+        parent.SetStatusText(text=u'Status Bar Info Goes Here', i=0)
 
         parent.SetStatusWidths([-1])
 
@@ -414,7 +440,7 @@ class TFrame(wx.Frame):
                             u".",
                             u"",
                             u"PAWS Games (*.py)|*.py",
-                            wx.OPEN)
+                            wx.FD_OPEN)
 
         #------------------------------
         # Show The Dialog To The Player
@@ -498,7 +524,7 @@ class TFrame(wx.Frame):
         # bad.
 
         STMT = u"from %s import *" % Global.GameModule
-        exec STMT in globals()
+        exec(STMT, globals(), locals())
 
         #-------------------
         # Start Running Game
@@ -810,7 +836,7 @@ def Save(FileName):
     try:
         PickleJar.dump(Global)
     except:
-        print u"save error!"
+        print(u"save error!")
 
     #----------------------
     # Close Saved Game File

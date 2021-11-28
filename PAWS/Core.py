@@ -1021,7 +1021,8 @@ def AppendDictList(Dict,Key,Value):
     # the developer doesn't have to worry about case sensitivity when
     # defining verbs and objects.
 
-    WordList = string.split(string.lower(Key),u",")
+    WordList = Key.lower().split(u",")
+    #WordList = string.split(string.lower(Key),u",")
 
     #-----------------------------
     # For each word in the list …
@@ -1049,10 +1050,15 @@ def AppendDictList(Dict,Key,Value):
         # Value to a list the second object added to the same key value
         # would cause the game to blow up with an error message.
 
-        if Dict.has_key(word):
+        try:
             Dict[word] = Union(Dict[word],[Value])
-        else:
+        except KeyError:
             Dict[word] = [Value]
+
+        #if Dict.has_key(word):
+        #    Dict[word] = Union(Dict[word],[Value])
+        #else:
+        #    Dict[word] = [Value]
 
 def Choose(Decision,TrueChoice,FalseChoice):
     """
@@ -4184,7 +4190,8 @@ class ClassBaseObject(ClassFundamental):
         # purposes. Notice we also set the NamePhrase to the KeyNoun, this
         # allows us to avoid having to set it explicitly.
 
-        NounList = string.split(Name, u",")
+        NounList = Name.split(u",")
+        #NounList = string.split(Name, u",")
 
         if len(NounList) > 0:
             self.KeyNoun = NounList[0]
@@ -4197,7 +4204,8 @@ class ClassBaseObject(ClassFundamental):
         # Set AdjectivePhrase
         #--------------------
 
-        AdjectiveList = string.split(Adjs, u",")
+        AdjectiveList = Adjs.split(u",")
+        #AdjectiveList = string.split(Adjs, u",")
 
         if len(AdjectiveList) > 0:
             self.AdjectivePhrase = AdjectiveList[0]
@@ -4261,7 +4269,8 @@ class ClassBaseVerbObject(ClassFundamental):
         # to the KeyNoun, this allows us to avoid having to set it
         # explicitly.
 
-        VerbList = string.split(Name, u",")
+        VerbList = Name.split(u",")
+        #VerbList = string.split(Name, u",")
 
         if len(VerbList) > 0:
             self.KeyNoun = VerbList[0]
