@@ -1098,7 +1098,7 @@ def DebugTrace(Text):
     """
 
     if not Global.Debug: return
-    print Text
+    print(Text)
     if Global.Transcribe: Global.DebugFile.write(Text+u"\n")
 
 def DebugDObjList():
