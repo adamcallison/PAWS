@@ -6140,10 +6140,10 @@ class ClassInsertVerb (ClassBasicVerb):
             if Multiple:
                 for i in range (0, len(P.DOL())):
                     TempList.append(P.DOL()[i].ADesc())
-                    print TempList
+                    print(TempList)
                 Result = string.join(TempList[:-1], u", ") + \
                     u" and " + TempList[-1]
-                print Result
+                print(Result)
             return Complain(u"""
                 Stuffing things like %s into living beings
                 is considered very rude, even here!

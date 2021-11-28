@@ -272,7 +272,8 @@ def BaseClasses(Class):
       to [] in the statement above).
       """
 
-    if type(Class) != types.ClassType: return ReturnList
+    #if type(Class) != types.ClassType: return ReturnList
+    if type(Class) is not type: return ReturnList
 
     #-----------------------------
     # Append Class to return list.
@@ -393,7 +394,8 @@ def ObjectBaseClasses(Object):
     # a class from being passed. This function will fail if a class were passed
     # to it.
 
-    if type(Object)!=types.InstanceType: return ReturnList
+    #if type(Object)!=types.InstanceType: return ReturnList
+    if type(Object) is type: return ReturnList
 
     #--------------------------
     # Get Object's Base Classes
