@@ -1,0 +1,18 @@
+wxpython
+- requires g++ to install via pip
+- will try to build wxWidgets, which has official requirements list (from
+  https://www.py4u.net/discuss/158134):
+-- dpkg-dev #was already installed on default linux mint
+-- build-essential
+-- libjpeg-dev
+-- libtiff-dev
+-- libsdl1.2-dev
+-- libgstreamer-plugins-base0.10-dev # or 1.0 if available
+                                     # 1.0 seems to be easily available
+-- libnotify-dev
+-- freeglut3
+-- freeglut3-dev
+-- libsm-dev #was already installed on default linux mint
+-- libgtk-3-dev #installation possibly working after installing this...
+-- libwebkitgtk-3.0-dev # or libwebkit2gtk-4.0-dev if available #didn't need
+-- libxtst-dev #didn't need
