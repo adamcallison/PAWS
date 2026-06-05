@@ -193,7 +193,7 @@ import random           # Random # generator & functions
 import six
 import sys              # System related functions
 import types            # variable type identifiers
-import wx               # wxPython GUI
+import tkinter as tk    # Tkinter GUI
 
 #********************************************************************************
 #                            Bootstrap Classes/Functions
@@ -549,7 +549,7 @@ class ClassFundamental:
 #********************************************************************************
 #                           Terminal Classes
 #
-# In this section we define the code that runs the wxPython terminal.
+# In this section we define the code that runs the Tkinter terminal.
 
 class ClassActiveIO(ClassFundamental):
     """Holds the Active Terminal reference."""
@@ -592,12 +592,12 @@ class ClassActiveIO(ClassFundamental):
 
 class ClassTerminal(ClassFundamental):
     """
-    wxPython Terminal
+    Tkinter Terminal
 
-    This is a wxPython based GUI terminal capable of lights, colors, bells
+    This is a Tkinter based GUI terminal capable of lights, colors, bells
     and whistles … at least, once those features are implemented.
 
-    wxPython terminals have the following abilities:
+    Tkinter terminals have the following abilities:
 
     Querying Screen dimensions (NO)
     Query cursor position (NO)
@@ -628,6 +628,18 @@ class ClassTerminal(ClassFundamental):
 
         self.CurrentFontPitch = 12
         self.CurrentFont = None
+
+        #----------------------------
+        # Tkinter Text Tag Management
+        #----------------------------
+
+        # Instead of wx's SetDefaultStyle/TextAttr approach, we use Tkinter's
+        # text tag system. Each unique style combination gets a named tag on the
+        # Text widget. _current_tag is the tag used for the next insertion.
+        # _tag_cache avoids creating duplicate tags for the same style.
+
+        self._current_tag = "default"
+        self._tag_cache = {}
 
         #--------------------------
         # I/O Capability Properties
@@ -668,7 +680,10 @@ class ClassTerminal(ClassFundamental):
 
     def ClearScreen(self):
         """Clear Screen"""
-        Terminal.Frame.TDisplay.Clear()
+        TD = Terminal.Frame.TDisplay
+        TD.config(state=tk.NORMAL)
+        TD.delete("1.0", tk.END)
+        TD.config(state=tk.DISABLED)
 
     def Configure(self):
         """Configure terminal colors"""
@@ -676,21 +691,23 @@ class ClassTerminal(ClassFundamental):
 
     def DisplayStatusLine(self,DisplayString):
         """Display Status Line"""
-        Terminal.Frame.TStatusBar.SetStatusText(DisplayString)
+        Terminal.Frame.TStatusBar.config(text=DisplayString)
 
     def Feed(self, Command):
         """
         Feeds a command to the terminal, just as if the player had typed
         it.
         """
-        Terminal.Frame.TInput.Clear()
-        Terminal.Frame.TInput.AppendText(Command)
+        Terminal.Frame.TInput.delete(0, tk.END)
+        Terminal.Frame.TInput.insert(0, Command)
         Terminal.Frame.ProcessPlayerInput()
 
     def GetXY(self):
         TD = Terminal.Frame.TDisplay
-        bln, x,y = TD.PositionToXY(TD.GetInsertionPoint())
-        return x,y
+        index = TD.index(tk.INSERT)
+        # index is like "12.5" meaning line 12, column 5
+        line, col = index.split(".")
+        return int(col), int(line)
 
     def HomeCursor(self):
         """Return Cursor To Home Position"""
@@ -703,7 +720,7 @@ class ClassTerminal(ClassFundamental):
         # Get Player's Input
         #-------------------
 
-        InputValue = Terminal.Frame.TInput.GetValue()
+        InputValue = Terminal.Frame.TInput.get()
         if InputValue is None: InputValue = ""
 
         #---------------------------------------------
@@ -761,16 +778,14 @@ class ClassTerminal(ClassFundamental):
 
     def RawOutput(self, Text):
         """
-        Output directly to terminal. The last line moves the view back 500
-        characters, which helps eliminate the lack of scrolling in the text
-        control on Windows.
+        Output directly to terminal. Inserts text with the current style tag
+        and scrolls to the end.
         """
         TD = Terminal.Frame.TDisplay
-        TD.SetEditable(True)
-        TD.AppendText(Text)
-        TD.SetEditable(False)
-        TD.ScrollLines(-1)
-        #TD.ShowPosition(TD.GetLastPosition() - 200)
+        TD.config(state=tk.NORMAL)
+        TD.insert(tk.END, Text, self._current_tag)
+        TD.config(state=tk.DISABLED)
+        TD.see(tk.END)
 
     def SetStyle(self,
                  Foreground = None,
@@ -783,37 +798,75 @@ class ClassTerminal(ClassFundamental):
                  IsUnderlined = False):
         """
         Set terminal's default style, color, font, and style.
+
+        Uses Tkinter text tags. Each unique combination of style properties
+        gets a cached tag name so we don't create duplicates.
         """
 
-        TF = Terminal.CurrentFont
-        TA = wx.TextAttr(wx.NullColour,wx.NullColour)
-        TD = Terminal.Frame.TDisplay
+        #-------------------------------
+        # Build Font Tuple for Tkinter
+        #-------------------------------
 
-        if FontPitch: TF.SetPointSize(FontPitch)
-        #if Font: TF.SetFontFace(Font)
+        # Tkinter fonts are specified as (family, size, style_string).
+        # We build the style string from the boolean flags.
 
-        if Foreground: TA.SetTextColour(Foreground)
-        if Background: TA.SetBackgroundColour(Background)
+        font_family = Font if Font else "Arial"
+        font_size = FontPitch if FontPitch else self.CurrentFontPitch
 
-        if IsNormal:
-             TF.SetStyle(wx.FONTSTYLE_NORMAL)
-             TF.SetWeight(wx.FONTWEIGHT_NORMAL)
+        # Update CurrentFont and CurrentFontPitch if specified
+        if FontPitch:
+            self.CurrentFontPitch = FontPitch
+        if Font:
+            self.CurrentFont = Font
 
-        if IsBold: TF.SetWeight(wx.FONTWEIGHT_BOLD)
-        if IsItalic: TF.SetStyle(wx.FONTSTYLE_ITALIC)
-        TF.SetUnderlined(IsUnderlined)
+        style_parts = []
+        if IsBold:
+            style_parts.append("bold")
+        if IsItalic:
+            style_parts.append("italic")
+        if IsUnderlined:
+            style_parts.append("underline")
 
-        TA.SetFont(TF)
-        TD.SetDefaultStyle(TA)
+        font_tuple = (font_family, font_size, " ".join(style_parts)) if style_parts else (font_family, font_size)
+
+        #-------------------------------
+        # Build Cache Key and Config
+        #-------------------------------
+
+        # We cache tags by their full configuration to avoid creating
+        # thousands of identical tags over a long game session.
+
+        cache_key = (Foreground, Background, font_tuple)
+
+        if cache_key in self._tag_cache:
+            self._current_tag = self._tag_cache[cache_key]
+            return
+
+        #-------------------------------
+        # Create New Tag
+        #-------------------------------
+
+        tag_name = f"style_{len(self._tag_cache)}"
+        tag_config = {}
+
+        if Foreground:
+            tag_config["foreground"] = Foreground
+        if Background:
+            tag_config["background"] = Background
+        tag_config["font"] = font_tuple
+
+        Terminal.Frame.TDisplay.tag_configure(tag_name, **tag_config)
+        self._tag_cache[cache_key] = tag_name
+        self._current_tag = tag_name
 
     def Terminate(self):
         """Close up the Tkinter widgets."""
         self.RawOutput("\n")
         self.MoreMessage()
-        Terminal.Frame.TDisplay.SetFocus()
-        Terminal.Frame.TInput.Enable(False)
-        Terminal.Frame.TInput.Clear()
-        Terminal.Frame.TInput.AppendText("Please click File → Exit to close terminal")
+        Terminal.Frame.TDisplay.focus_set()
+        Terminal.Frame.TInput.config(state=tk.DISABLED)
+        Terminal.Frame.TInput.delete(0, tk.END)
+        Terminal.Frame.TInput.insert(0, "Please click File → Exit to close terminal")
 
     #----------------------
     # Background Dim Colors
@@ -2962,7 +3015,7 @@ class ClassParser(ClassFundamental):
                 # Need to do some terminal stuff manually here,
                 # since we don't run through the full parser.
                 self.SayVerb.Action()
-                Terminal.Frame.TInput.Clear()
+                Terminal.Frame.TInput.delete(0, tk.END)
                 Say("~n ")
                 return TURN_CONTINUES
 
