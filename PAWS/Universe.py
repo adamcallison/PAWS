@@ -159,7 +159,7 @@ def Agree(Verb, Subject=None, Contract=FALSE):
     # any, of course). This is just adding robustness to the function, 99 times
     # out of 100 it won't make any difference, but that 100'th time …
 
-    Verb = string.strip(Verb)
+    Verb = Verb.strip()
 
     #---------------------
     # Use Contracted Form?
@@ -2873,7 +2873,7 @@ class ClassBasicThing(ClassBaseObject):
         # Notice the capitalization of the expected pronoun, it won't work
         # otherwise!
 
-        Attr = "CantLook" + string.capitalize(Attr)
+        Attr = "CantLook" + Attr.capitalize()
 
         #------------
         # Can't Look?
@@ -3711,7 +3711,7 @@ class ClassBasicThing(ClassBaseObject):
         for Object in Contents:
             TempList.append(Object.ChooseArticleDesc())
 
-        Result = string.join(TempList[:-1], ", ") + " and " + TempList[-1]
+        Result = ", ".join(TempList[:-1]) + " and " + TempList[-1]
 
         #--------------
         # Return Result
@@ -5629,7 +5629,7 @@ class ClassBasicVerb(ClassBaseVerbObject):
                     return Complain(SCase("what would you like to " + P.CVN() + "?"))
                 else:
                     return Complain(SCase("what would you like to " +P.CVN() + " " + \
-                                          string.join(P.AP().CurrentPrepList) + "?"))
+                                          ", ".join(P.AP().CurrentPrepList) + "?"))
 
 
         #-----------------------------
@@ -5643,7 +5643,7 @@ class ClassBasicVerb(ClassBaseVerbObject):
             if not (self.ObjectAllowance & ALLOW_NO_IOBJS):
                 return Complain(SCase(P.CVN() + " " + \
                                       P.DOL()[0].NamePhrase + " " + \
-                                      string.join(P.AP().CurrentPrepList) + \
+                                      ", ".join(P.AP().CurrentPrepList) + \
                                       " what?"))
 
 
@@ -6143,7 +6143,7 @@ class ClassInsertVerb (ClassBasicVerb):
                 for i in range (0, len(P.DOL())):
                     TempList.append(P.DOL()[i].ADesc())
                     print(TempList)
-                Result = string.join(TempList[:-1], ", ") + \
+                Result = ", ".join(TempList[:-1]) + \
                     " and " + TempList[-1]
                 print(Result)
             return Complain("""
@@ -6505,8 +6505,8 @@ class ClassSayVerb(ClassBasicVerb):
     def Action(self):
         """Say action"""
         if not Global.Debug:
-            P.AP().SaidText = string.replace(P.AP().SaidText, "{", "[")
-            P.AP().SaidText = string.replace(P.AP().SaidText, "}", "]")
+            P.AP().SaidText = P.AP().SaidText.replace("{", "[")
+            P.AP().SaidText = P.AP().SaidText.replace("}", "]")
             text = P.AP().SaidText[len(self.NamePhrase)+1:]
             if text:
                 Say('Okay … "%s"' % text)
@@ -6793,7 +6793,7 @@ class ClassWishForVerb(ClassBasicVerb):
         StringCarried = ""
         if ObjectsCarried:
             if len(ObjectsCarried) > 1:
-                StringCarried = string.join(ObjectsCarried[:-1], ", ") + \
+                StringCarried = ", ".join(ObjectsCarried[:-1]) + \
                     " and " + ObjectsCarried[-1]
                 Article = "are"
             else:
@@ -6808,7 +6808,7 @@ class ClassWishForVerb(ClassBasicVerb):
         StringWished = ""
         if ObjectsWished:
             if len(ObjectsWished) > 1:
-                StringWished = string.join(ObjectsWished[:-1], ", ") + \
+                StringWished = ", ".join(ObjectsWished[:-1]) + \
                     " and " + ObjectsWished[-1]
                 Article = "are"
             else:

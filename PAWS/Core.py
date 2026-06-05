@@ -190,7 +190,6 @@ import pickle           # picking functions (for save/restore)
 import re               # Regular Expressions
 import string           # String handling functions
 import random           # Random # generator & functions
-import six
 import sys              # System related functions
 import types            # variable type identifiers
 import tkinter as tk    # Tkinter GUI
@@ -1896,7 +1895,7 @@ def SayOriginal(Text=""):
     # expression. ~p is replaced with a pair of ~n's.
 
     Text = Engine.XlateCBEFunction(Text)
-    Text = string.replace(Text, "~p", "~n ~n")
+    Text = Text.replace("~p", "~n ~n")
 
     #-----------------
     # Create Word List
@@ -1905,7 +1904,7 @@ def SayOriginal(Text=""):
     # This will break the text into a list of words which we can then use a FOR
     # loop on.
 
-    WordList = string.split(Text)
+    WordList = Text.split()
 
     #---------------------------
     # For each word in Word List
@@ -1976,8 +1975,8 @@ def SayOriginal(Text=""):
 
         # Replace ~n and ~t with their print() statement equivalents.
 
-        Word = string.replace(Word, "~n", "\n")
-        Word = string.replace(Word, "~t", "  ")
+        Word = Word.replace("~n", "\n")
+        Word = Word.replace("~t", "  ")
 
         #-------------------------------
         # If it starts with a line break

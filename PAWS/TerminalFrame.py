@@ -681,8 +681,8 @@ def TranslateCBExpression(Text=""):
     try:
         Expr = eval(Text[OpenBrace+1:CloseBrace])
         if type(Expr) != type(""): Expr = repr(Expr)
-    except Exception as e:
-        Expr = "Invalid CBE '%s' (error: %s)" % (Text[OpenBrace+1:CloseBrace], e)
+    except:
+        Expr = "Invalid CBE '%s'" % Text[OpenBrace+1:CloseBrace]
 
     #------------------------
     # Replace CBE With Result
